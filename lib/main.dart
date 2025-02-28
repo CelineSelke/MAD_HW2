@@ -36,45 +36,47 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var total = 0.0;
   String totalString = "0";
-  String operator = "start";
+  String operator = "";
   Queue operand = Queue();
   int powerCount = -1;
   bool decimal = false;
+  String calculation = "";
 
-  void calculate(){
-      total = 0;
-  }
 
-  void pushOperand(double number){
+  void pushOperand(double value){
     setState(() {
-      if(operator == "="){
-        operand.removeFirst();
-        operator = "start";
-      }
-      else if(operand.isEmpty == false){
-        if(operator == "start" && decimal == false){
-          operand.addFirst(number + (10 * operand.removeFirst())); 
+        if(operand.isEmpty == true){
+            operand.addFirst(value);
         }
         else{
-          if(decimal == true){
-            operand.addFirst(operand.removeFirst() + (number * pow(10, powerCount)));
-            powerCount--;
-          }
-          else{
-            operand.addFirst(number);
+            if((operator == "+" || operator == "-" || operator == "/" || operator == "*")){
+                if(operand.length == 1){                 
+                    operand.addFirst(value);
+                }
+                else if(operand.length == 2){
+                    if(decimal == true){
+                        operand.addFirst(operand.removeFirst() + (value * pow(10, powerCount)));
+                        powerCount--;
+                    }
+                    else{
+                        operand.addFirst(value + (10 * operand.removeFirst())); 
 
-          }
+                    }
+                }
+            }
+            else{
+              if(decimal == true){
+                  operand.addFirst(operand.removeFirst() + (value * pow(10, powerCount)));
+                  powerCount--;
+              }
+              else{
+                  operand.addFirst(value + (10 * operand.removeFirst())); 
+
+              }
+
+            }
         }
-      }
-      else{
-          if(decimal == true){
-            operand.addFirst(operand.removeFirst() + (number * pow(10, powerCount)));
-            powerCount--;
-          }
-          else{
-            operand.addFirst(number);
-          }
-      }
+        buildCalculation();
 
     });
   
@@ -144,6 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
         if(decimal == true){
           decimal = false;
         }
+
+        buildCalculation();
       
       });
   }
@@ -151,6 +155,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void startDecimalOperation(){
       setState(() {
         decimal = true;
+        if(operand.isEmpty == false && (operator == "+" || operator == "-" || operator == "/" || operator == "*") && operand.length < 2){
+            operand.addFirst(0.0);
+        }
+        else if(operand.isEmpty == true){
+            operand.addFirst(0.0);
+        }
       });
   }
 
@@ -158,11 +168,35 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       total = 0;
       totalString = "0";
-      operator = "start";
+      operator = "";
+      powerCount = -1;
+      decimal = false;
+      calculation = "";
       while(operand.isEmpty == false){
         operand.removeFirst();
       }
     });
+  }
+
+  void buildCalculation(){
+      setState(() {
+        if(operand.isEmpty == true){
+            calculation = "";
+        }
+        else{
+          if(operator != ""){
+            if(operand.length == 1){
+                calculation = "${operand.first} $operator";
+            }
+            if(operand.length == 2){
+                calculation = "${operand.last} $operator ${operand.first}";
+            }
+          }
+          else{
+              calculation = "${operand.first}";
+          }
+        }
+      });
   }
 
 
@@ -189,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
               totalString,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            Text("{$operand}, $operator"),
+            Text(calculation),
 
             ElevatedButton(onPressed: () => {setOperator("+")}, child: Text("+")),
             ElevatedButton(onPressed: () => {setOperator("-")}, child: Text("-")),

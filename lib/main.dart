@@ -16,6 +16,9 @@ class MyApp extends StatelessWidget {
       title: 'Calculator',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: Colors.black,
+        elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurple, backgroundColor: Colors.white)),
+        textTheme: TextTheme(headlineLarge: TextStyle(color: Colors.white), bodyLarge: TextStyle(color: Colors.white), headlineMedium: TextStyle(color: Colors.deepPurple)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Calculator'),
@@ -43,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String calculation = "";
 
 
-  void pushOperand(double value){
+  void pushOperand(num value){
     setState(() {
         if(operand.isEmpty == true){
             operand.addFirst(value);
@@ -95,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       if (operator == "/"){
           setState(() {
-            double dividend = operand.removeLast();
+            num dividend = operand.removeLast();
             if(operand.first == 0.0){
                totalString = "Divide By Zero Error";
             }
@@ -218,29 +221,53 @@ class _MyHomePageState extends State<MyHomePage> {
 
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
-            Text(
-              totalString,
-              style: Theme.of(context).textTheme.headlineMedium,
+            Padding(padding: EdgeInsets.only(
+              left: 80, top: 10, bottom: 10, right: 80
             ),
-            Text(calculation),
+            
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(calculation, style: Theme.of(context).textTheme.bodyLarge, overflow: TextOverflow.ellipsis,),
+              Spacer(),
+              Text(
+              totalString,
+              style: Theme.of(context).textTheme.headlineLarge,
+              overflow: TextOverflow.ellipsis,
+              ),
+              
+            ],),
+            ),
+            
+            
+            
+            Row(mainAxisAlignment: MainAxisAlignment.center,children: [
+              ElevatedButton(onPressed: () => {pushOperand(1.0)}, child: Text("1",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {pushOperand(2.0)}, child: Text("2",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {pushOperand(3.0)}, child: Text("3",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {setOperator("+")}, child: Text("+",style: Theme.of(context).textTheme.headlineMedium,)),
+            ],),
+            
+            Row(mainAxisAlignment: MainAxisAlignment.center,children: [ 
+              ElevatedButton(onPressed: () => {pushOperand(4.0)}, child: Text("4",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {pushOperand(5.0)}, child: Text("5",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {pushOperand(6.0)}, child: Text("6",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {setOperator("-")}, child: Text("-",style: Theme.of(context).textTheme.headlineMedium,)),
+            ],),
 
-            ElevatedButton(onPressed: () => {setOperator("+")}, child: Text("+")),
-            ElevatedButton(onPressed: () => {setOperator("-")}, child: Text("-")),
-            ElevatedButton(onPressed: () => {setOperator("*")}, child: Text("x")),
-            ElevatedButton(onPressed: () => {setOperator("/")}, child: Text("÷")),
-            ElevatedButton(onPressed: () => {startDecimalOperation()}, child: Text(".")),
-            ElevatedButton(onPressed: () => {calculateTotal()}, child: Text("=")),
-            ElevatedButton(onPressed: () => {pushOperand(1.0)}, child: Text("1")),
-            ElevatedButton(onPressed: () => {pushOperand(2.0)}, child: Text("2")),
-            ElevatedButton(onPressed: () => {pushOperand(3.0)}, child: Text("3")),
-            ElevatedButton(onPressed: () => {pushOperand(4.0)}, child: Text("4")),
-            ElevatedButton(onPressed: () => {pushOperand(5.0)}, child: Text("5")),
-            ElevatedButton(onPressed: () => {pushOperand(6.0)}, child: Text("6")),
-            ElevatedButton(onPressed: () => {pushOperand(7.0)}, child: Text("7")),
-            ElevatedButton(onPressed: () => {pushOperand(8.0)}, child: Text("8")),
-            ElevatedButton(onPressed: () => {pushOperand(9.0)}, child: Text("9")),
-            ElevatedButton(onPressed: () => {pushOperand(0.0)}, child: Text("0")),
+            Row(mainAxisAlignment: MainAxisAlignment.center,children: [
+            ElevatedButton(onPressed: () => {pushOperand(7.0)}, child: Text("7",style: Theme.of(context).textTheme.headlineMedium,)),
+            ElevatedButton(onPressed: () => {pushOperand(8.0)}, child: Text("8",style: Theme.of(context).textTheme.headlineMedium,)),
+            ElevatedButton(onPressed: () => {pushOperand(9.0)}, child: Text("9",style: Theme.of(context).textTheme.headlineMedium,)),
+            ElevatedButton(onPressed: () => {setOperator("*")}, child: Text("x",style: Theme.of(context).textTheme.headlineMedium,)),
+            ],),
+
+            Row(mainAxisAlignment: MainAxisAlignment.center,children: [
+              ElevatedButton(onPressed: () => {startDecimalOperation()}, child: Text(".",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {pushOperand(0.0)}, child: Text("0",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {calculateTotal()}, child: Text("=",style: Theme.of(context).textTheme.headlineMedium,)),
+              ElevatedButton(onPressed: () => {setOperator("/")}, child: Text("÷",style: Theme.of(context).textTheme.headlineMedium,)),
+            ],),
+
+
           
 
           ],

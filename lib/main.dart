@@ -17,8 +17,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         scaffoldBackgroundColor: Colors.black,
-        elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurple, backgroundColor: Colors.white)),
-        textTheme: TextTheme(headlineLarge: TextStyle(color: Colors.white), bodyLarge: TextStyle(color: Colors.white), headlineMedium: TextStyle(color: Colors.deepPurple)),
+        elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(foregroundColor: Colors.deepPurple, backgroundColor: Colors.white,shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32.0),
+              side: BorderSide(color: Colors.deepPurple)),
+              minimumSize: const Size(90, 60),)),
+        textTheme: TextTheme(headlineLarge: TextStyle(color: Colors.white), bodyLarge: TextStyle(color: Colors.white), headlineMedium: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Calculator'),
@@ -99,8 +102,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if (operator == "/"){
           setState(() {
             num dividend = operand.removeLast();
-            if(operand.first == 0.0){
+            if(operand.last == 0.0){
                totalString = "Divide By Zero Error";
+
+               return;
             }
             else{
                total = dividend / operand.removeLast();
@@ -167,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
   }
 
-  void reset(){
+  void clear(){
     setState(() {
       total = 0;
       totalString = "0";
@@ -189,14 +194,14 @@ class _MyHomePageState extends State<MyHomePage> {
         else{
           if(operator != ""){
             if(operand.length == 1){
-                calculation = "${operand.first} $operator";
+                calculation = "${operand.first.toStringAsPrecision(3)} $operator";
             }
             if(operand.length == 2){
-                calculation = "${operand.last} $operator ${operand.first}";
+                calculation = "${operand.last.toStringAsPrecision(3)} $operator ${operand.first.toStringAsPrecision(3)}";
             }
           }
           else{
-              calculation = "${operand.first}";
+              calculation = "${operand.first.toStringAsPrecision(3)}";
           }
         }
       });
@@ -222,10 +227,11 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(padding: EdgeInsets.only(
-              left: 80, top: 10, bottom: 10, right: 80
+              left: 30, top: 10, bottom: 10, right: 30
             ),
             
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            child: 
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(calculation, style: Theme.of(context).textTheme.bodyLarge, overflow: TextOverflow.ellipsis,),
               Spacer(),
               Text(
@@ -274,9 +280,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: reset,
-        tooltip: 'Reset',
-        child: const Text("Reset"),
+        onPressed: clear,
+        tooltip: 'Clear',
+        child: const Text("Clear"),
       ),
     );
   }
